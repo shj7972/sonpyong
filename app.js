@@ -120,6 +120,13 @@
     const navBtn = document.querySelector('.nav-item[data-page="' + page + '"]');
     if (navBtn) navBtn.classList.add('active');
 
+    // URL 해시 업데이트 (홈은 해시 제거)
+    if (page === 'home') {
+      history.replaceState(null, '', window.location.pathname);
+    } else {
+      history.replaceState(null, '', '#' + page);
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Refresh data on page load
@@ -127,6 +134,17 @@
     if (page === 'analytics') updateAnalytics();
     if (page === 'flashcard') renderFlashcard();
   };
+
+  // URL 해시 기반 딥링크 지원
+  function handleHashRoute() {
+    const hash = window.location.hash.replace('#', '');
+    const validPages = ['home', 'quiz', 'flashcard', 'law', 'summary', 'analytics'];
+    if (hash && validPages.includes(hash)) {
+      navigateTo(hash);
+    }
+  }
+
+  window.addEventListener('hashchange', handleHashRoute);
 
   // ── HOME ──
   function initHome() {
@@ -1343,5 +1361,6 @@
   // ── Init ──
   loadState();
   loadData();
+  handleHashRoute();
 
 })();
