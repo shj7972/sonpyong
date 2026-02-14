@@ -1,12 +1,7 @@
 # sonpyeong.kr robots.txt
 User-agent: *
 Allow: /
-
-# Sitemap
 Sitemap: https://sonpyeong.kr/sitemap.xml
 
 # 불필요한 경로 차단
 Disallow: /venv/
-Disallow: /data/*.doc
-Disallow: /data/*.docx
-Disallow: /data/*.pdf
