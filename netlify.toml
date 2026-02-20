@@ -1,0 +1,61 @@
+# Netlify Configuration
+# vercel.json에서 이전된 설정
+
+[build]
+  publish = "."
+
+# ── 전역 보안 헤더 ──────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options        = "DENY"
+    X-XSS-Protection       = "1; mode=block"
+    Referrer-Policy        = "strict-origin-when-cross-origin"
+
+# ── 정적 에셋 장기 캐시 ──────────────────────────────────────
+[[headers]]
+  for = "/styles.css"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/app.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/og-image.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# ── 데이터 파일 일일 캐시 ────────────────────────────────────
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=86400, stale-while-revalidate=604800"
+
+# ── sitemap / robots / ads ───────────────────────────────────
+[[headers]]
+  for = "/sitemap.xml"
+  [headers.values]
+    Content-Type  = "application/xml"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/robots.txt"
+  [headers.values]
+    Content-Type  = "text/plain"
+    Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/ads.txt"
+  [headers.values]
+    Content-Type  = "text/plain"
+    Cache-Control = "public, max-age=86400"
+
+# ── Pretty URLs (vercel cleanUrls + trailingSlash:false 대체) ─
+[[redirects]]
+  from   = "/*/"
+  to     = "/:splat"
+  status = 301
