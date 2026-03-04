@@ -106,7 +106,7 @@
   }
 
   // ── Navigation ──
-  window.navigateTo = function (page) {
+  window.navigateTo = function (page, skipPush) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
@@ -120,11 +120,10 @@
     const navBtn = document.querySelector('.nav-item[data-page="' + page + '"]');
     if (navBtn) navBtn.classList.add('active');
 
-    // URL 해시 업데이트 (홈은 해시 제거)
-    if (page === 'home') {
-      history.replaceState(null, '', window.location.pathname);
-    } else {
-      history.replaceState(null, '', '#' + page);
+    // URL 경로 업데이트 (History API)
+    if (!skipPush) {
+      const newPath = (page === 'home') ? '/' : '/' + page;
+      history.pushState({ page: page }, '', newPath);
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -135,16 +134,32 @@
     if (page === 'flashcard') renderFlashcard();
   };
 
-  // URL 해시 기반 딥링크 지원
-  function handleHashRoute() {
+  // URL 경로 기반 라우팅
+  const validPages = ['home', 'quiz', 'flashcard', 'law', 'summary', 'analytics'];
+
+  function handleRoute() {
+    // 기존 해시 URL 하위 호환 (/#quiz → /quiz 리다이렉트)
     const hash = window.location.hash.replace('#', '');
-    const validPages = ['home', 'quiz', 'flashcard', 'law', 'summary', 'analytics'];
     if (hash && validPages.includes(hash)) {
-      navigateTo(hash);
+      const newPath = '/' + hash;
+      history.replaceState({ page: hash }, '', newPath);
+      navigateTo(hash, true);
+      return;
+    }
+
+    // pathname 기반 라우팅
+    const path = window.location.pathname.replace(/^\//, '').replace(/\/$/, '');
+    if (path && validPages.includes(path)) {
+      navigateTo(path, true);
+    } else {
+      navigateTo('home', true);
     }
   }
 
-  window.addEventListener('hashchange', handleHashRoute);
+  // 브라우저 뒤로/앞으로 버튼 지원
+  window.addEventListener('popstate', function () {
+    handleRoute();
+  });
 
   // ── HOME ──
   function initHome() {
@@ -1361,6 +1376,6 @@
   // ── Init ──
   loadState();
   loadData();
-  handleHashRoute();
+  handleRoute();
 
 })();

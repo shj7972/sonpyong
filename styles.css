@@ -92,6 +92,8 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  text-decoration: none;
+  color: inherit;
 }
 
 .logo-icon {
@@ -136,7 +138,7 @@ body {
   height: 64px;
 }
 
-.nav-item {
+a.nav-item {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -151,7 +153,10 @@ body {
   -webkit-tap-highlight-color: transparent;
   justify-content: center;
   position: relative;
+  text-decoration: none;
 }
+
+
 
 .nav-item.active {
   color: var(--primary);
