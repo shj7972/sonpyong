@@ -105,6 +105,40 @@
     }
   }
 
+  // ── SEO 메타데이터 (페이지별) ──
+  const PAGE_SEO = {
+    home: {
+      title: '손평마스터 - 손해평가사 시험 완벽 대비 | 기출문제·플래시카드·법령·요약노트',
+      description: '손해평가사 시험 합격을 위한 올인원 학습 플랫폼. 기출문제 풀이, 스마트 플래시카드, 상법·재해보험법·손해평가요령 법령 전문, 핵심 요약노트, AI 성적분석까지. 무료로 시작하세요!',
+      url: 'https://sonpyeong.kr/'
+    },
+    quiz: {
+      title: '손해평가사 기출문제 풀기 - 연도별·과목별·약점집중 | 손평마스터',
+      description: '손해평가사 1차·2차 기출문제를 연도별·과목별로 풀어보세요. 순서대로, 랜덤, 약점집중 3가지 모드 지원. 오답노트와 북마크 기능까지 무료 제공.',
+      url: 'https://sonpyeong.kr/quiz'
+    },
+    flashcard: {
+      title: '손해평가사 플래시카드 - 스마트 간격반복 학습 | 손평마스터',
+      description: '손해평가사 시험 핵심 개념을 스마트 플래시카드로 학습하세요. 간격반복(스페이스드 리피티션) 알고리즘으로 효율적인 암기가 가능합니다.',
+      url: 'https://sonpyeong.kr/flashcard'
+    },
+    law: {
+      title: '손해평가사 관계 법령 전문 - 상법 보험편·농어업재해보험법·손해평가요령 | 손평마스터',
+      description: '손해평가사 시험 관계 법령 전문을 무료로 열람하세요. 상법 보험편, 농어업재해보험법령, 손해평가요령 전문을 조문 검색과 함께 제공합니다.',
+      url: 'https://sonpyeong.kr/law'
+    },
+    summary: {
+      title: '손해평가사 핵심 요약노트 - 시험 직전 압축 정리 | 손평마스터',
+      description: '손해평가사 시험 직전 빠르게 훑어볼 수 있는 초압축 요약노트. 핵심 개념과 중요 내용을 한눈에 정리했습니다.',
+      url: 'https://sonpyeong.kr/summary'
+    },
+    analytics: {
+      title: '손해평가사 성적 분석 - 과목별·연도별 정답률 분석 | 손평마스터',
+      description: '손해평가사 시험 과목별, 연도별 정답률과 약점을 분석합니다. AI 기반 성적 분석으로 취약 유형을 파악하고 집중 학습하세요.',
+      url: 'https://sonpyeong.kr/analytics'
+    }
+  };
+
   // ── Navigation ──
   window.navigateTo = function (page, skipPush) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -125,6 +159,14 @@
       const newPath = (page === 'home') ? '/' : '/' + page;
       history.pushState({ page: page }, '', newPath);
     }
+
+    // SEO: title, canonical, meta description 페이지별 업데이트
+    const seo = PAGE_SEO[page] || PAGE_SEO.home;
+    document.title = seo.title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', seo.description);
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.setAttribute('href', seo.url);
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
